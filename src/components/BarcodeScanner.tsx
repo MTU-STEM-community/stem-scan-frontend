@@ -8,6 +8,20 @@ interface BarcodeScannerProps {
   onDetected: (code: string) => void;
 }
 
+interface QuaggaResult {
+  boxes: { x: number; y: number; w: number; h: number }[]; // Array of box coordinates
+  box: { x: number; y: number; w: number; h: number }; // Current bounding box
+  codeResult?: {
+    code: string;
+  };
+}
+
+interface QuaggaDetectedData {
+  codeResult: {
+    code: string;
+  };
+}
+
 const BarcodeScanner: FC<BarcodeScannerProps> = ({ onDetected }) => {
   const scannerRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string>("");
@@ -43,6 +57,11 @@ const BarcodeScanner: FC<BarcodeScannerProps> = ({ onDetected }) => {
               "ean_8_reader", // Short EAN
               "upc_reader", // Universal Product Code
               "upc_e_reader", // Short UPC
+              "code_39_reader", // Code 39
+              "code_93_reader", // Code 93
+              "i2of5_reader", // ITF
+              "qr_reader", // QR Code
+              "datamatrix_reader",
             ],
             debug: {
               drawBoundingBox: true, // Show the bounding box around detected barcodes
@@ -62,8 +81,8 @@ const BarcodeScanner: FC<BarcodeScannerProps> = ({ onDetected }) => {
           }
           Quagga.start();
 
-          //Handle processed frames
-          Quagga.onProcessed((result) => {
+          // Handle processed frames
+          Quagga.onProcessed((result: QuaggaResult) => {
             const drawingCanvas = Quagga.canvas.dom.overlay;
 
             if (result) {
@@ -94,8 +113,8 @@ const BarcodeScanner: FC<BarcodeScannerProps> = ({ onDetected }) => {
             }
           });
 
-          //Handle detected barcodes
-          Quagga.onDetected((data) => {
+          // Handle detected barcodes
+          Quagga.onDetected((data: QuaggaDetectedData) => {
             console.log(`Detected barcode: ${data.codeResult.code}`);
             onDetected(data.codeResult.code);
             Quagga.stop();
@@ -109,7 +128,7 @@ const BarcodeScanner: FC<BarcodeScannerProps> = ({ onDetected }) => {
     return () => {
       Quagga.stop();
     };
-  }, []);
+  }, [onDetected]);
 
   return (
     <div>
