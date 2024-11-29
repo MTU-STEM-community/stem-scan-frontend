@@ -25,12 +25,32 @@ const BarcodeScanner: FC<BarcodeScannerProps> = ({ onDetected }) => {
           inputStream: {
             type: 'LiveStream',
             constraints: {
-              facingMode: 'environment', // Use the back camera if available
+              facingMode: 'environment', // Try the back camera
             },
             target: scannerRef.current,
+            area: { // Restrict scan area for better performance
+              top: "0%",    // Percentage of the height of the screen
+              right: "0%",  // Percentage of the width of the screen
+              left: "0%",   // Percentage of the width of the screen
+              bottom: "0%", // Percentage of the height of the screen
+            },
           },
           decoder: {
-            readers: ['code_128_reader'], // Add more barcode types if necessary
+            readers: [
+              'code_128_reader',    // Common format for barcodes
+              'ean_reader',         // European Article Numbers
+              'ean_8_reader',       // Short EAN
+              'upc_reader',         // Universal Product Code
+              'upc_e_reader',       // Short UPC
+            ],
+            debug: {
+              drawBoundingBox: true, // Show the bounding box around detected barcodes
+              drawScanline: true,    // Show the scanning line
+            },
+          },
+          locator: {
+            halfSample: true,         // Speed up detection
+            patchSize: "medium",      // Options: x-small, small, medium, large
           },
         },
         (err: Error | null) => {
@@ -42,6 +62,7 @@ const BarcodeScanner: FC<BarcodeScannerProps> = ({ onDetected }) => {
           Quagga.start();
         }
       );
+
     };
 
     initScanner();
