@@ -19,3 +19,8 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.video-container {
+    transform: scaleX(-1); /* Flip horizontally */
+    -webkit-transform: scaleX(-1); /* Safari compatibility */
+  }

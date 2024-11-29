@@ -136,6 +136,7 @@ const BarcodeScanner: FC<BarcodeScannerProps> = ({ onDetected }) => {
       <div
         ref={scannerRef}
         style={{ width: "100%", height: "300px", position: "relative" }}
+        className="video-container"
       />
     </div>
   );
