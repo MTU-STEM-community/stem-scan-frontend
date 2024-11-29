@@ -3,9 +3,15 @@
 import { useEffect, useState } from 'react';
 import { getMatricNumbers } from '@/lib/api';
 
+interface MatricNumber {
+  id: number;
+  matricNum: string;
+  createdAt: string;
+}
+
 const MatricsPage = () => {
-  const [matrics, setMatrics] = useState([]);
-  const [error, setError] = useState('');
+  const [matrics, setMatrics] = useState<MatricNumber[]>([]);
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     const fetchMatrics = async () => {
