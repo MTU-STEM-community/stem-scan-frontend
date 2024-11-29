@@ -18,16 +18,19 @@ const BarcodeScanner: FC<BarcodeScannerProps> = ({ onDetected }) => {
       {
         inputStream: {
           type: 'LiveStream',
+          constraints: {
+            facingMode: 'environment', // Use the back camera if available
+          },
           target: scannerRef.current,
         },
         decoder: {
-          readers: ['code_128_reader'],
+          readers: ['code_128_reader'], // Add more barcode types if necessary
         },
       },
       (err: Error | null) => {
         if (err) {
-          setError('Unable to initialize barcode scanner.');
-          console.error(err);
+          console.error('Quagga Initialization Error:', err);
+          setError('Unable to initialize barcode scanner. Please check camera permissions.');
           return;
         }
         Quagga.start();
@@ -35,6 +38,7 @@ const BarcodeScanner: FC<BarcodeScannerProps> = ({ onDetected }) => {
     );
 
     Quagga.onDetected((data: { codeResult: { code: string } }) => {
+      console.log('Detected code:', data.codeResult.code);
       onDetected(data.codeResult.code);
       Quagga.stop();
     });
