@@ -8,7 +8,7 @@ const ScanPage = () => {
   const [matricNum, setMatricNum] = useState('');
   const [message, setMessage] = useState('');
 
-  const handleDetected = async (code) => {
+  const handleDetected = async (code: string) => {
     setMatricNum(code);
     try {
       const result = await saveMatricNumber(code);
