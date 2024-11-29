@@ -93,6 +93,13 @@ const BarcodeScanner: FC<BarcodeScannerProps> = ({ onDetected }) => {
               }
             }
           });
+
+          //Handle detected barcodes
+          Quagga.onDetected((data) => {
+            console.log(`Detected barcode: ${data.codeResult.code}`);
+            onDetected(data.codeResult.code);
+            Quagga.stop();
+          });
         }
       );
     };
